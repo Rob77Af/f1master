@@ -1,11 +1,10 @@
 <template>
   <div>
-    <label for="name">Name</label>
-    <input id="name" v-model="name" />
-    <label for="email">Email</label>
-    <input id="email" v-model="email" type="email" />
-    <label for="password">Password</label>
-    <input id="password" v-model="password" type="password" />
+    <input id="firstName" v-model="firstName" placeholder="Name" />
+    <input id="secondName" v-model="secondName" placeholder="Surname" />
+    <input id="email" v-model="email" placeholder="email" type="email" />
+    <input id="password" v-model="password" placeholder="password" type="password" />
+    <input id="acceptTerms" v-model="acceptTerms" type="checkbox" />
     <button @click="submit">Submit</button>
   </div>
 </template>
@@ -15,7 +14,12 @@ import { defineProps, ref } from "vue";
 
 // Define the props of the component with types and validations
 const props = defineProps({
-  name: {
+  firstName: {
+    type: String,
+    required: true,
+    validator: (value: string) => value.length > 2,
+  },
+  secondName: {
     type: String,
     required: true,
     validator: (value: string) => value.length > 2,
@@ -26,16 +30,22 @@ const props = defineProps({
     validator: (value: string) => value.includes("@"),
   },
   password: {
-    type: String,
+    type: String as PropType<string>,
     required: true,
-    validator: (value: string) => value.length > 6,
+    validator: (value: string) => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(value),
   },
-});
+  acceptTerms: {
+    type: Boolean,
+    required: true,
+    validator: (value: boolean) => value,
+  },
+  });
 
 // Use refs to make the props reactive
-const name = ref(props.name);
+const firstName = ref(props.firstName);
 const email = ref(props.email);
 const password = ref(props.password);
+const acceptTerms = ref(props.acceptTerms);
 
 // Define a function to submit the input model data
 const submit = () => {
